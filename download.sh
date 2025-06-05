@@ -1,12 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
 # download_playlist downloads a single playlist passed as an argument by
 # playlist id
 download_playlist() {
+
+    format="%(artist)s - %(title)s.%(ext)s"
+
+    if [[ "$2" == "album" ]]; then
+        echo "encountered album, will adjust formatting"
+        format="%(playlist_index)02d - %(artist)s - %(title)s.%(ext)s"
+    fi
+
     yt-dlp \
         -v \
         --yes-playlist \
-        -o "%(artist)s - %(title)s.%(ext)s" \
+        -o "$format" \
         --windows-filenames \
         --abort-on-unavailable-fragment \
         --buffer-size 1M \
@@ -19,18 +27,23 @@ download_playlist() {
 
 for dir in ./playlists/*
 do
-    cd "${dir}"
-    plid=$(cat _id.txt)
-    echo $plid
 
+    echo "dir $dir"
+
+    cd "${dir}"
+
+    readarray -t lines < _id.txt
+    plid="${lines[0]}"
+    pltyp="${lines[1]}"
+    
     resp=$(curl -s "https://youtube.googleapis.com/youtube/v3/playlists" \
         -G \
         --data-urlencode "part=snippet,contentDetails,status" \
         --data-urlencode "id=$plid" \
         --data-urlencode "key=$YOUTUBE_API_KEY")
-    
+
     echo "Downloading playlist $(echo "$resp" | jq '.items[0].snippet.localized.title') ($plid)"
-    download_playlist $plid
+    download_playlist $plid $pltyp
 
     cd ../..
 done
