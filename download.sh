@@ -29,12 +29,13 @@ for dir in ./playlists/*
 do
 
     echo "dir $dir"
-
     cd "${dir}"
 
     readarray -t lines < _id.txt
     plid="${lines[0]}"
     pltyp="${lines[1]}"
+
+    ../../get_all_videos_info.sh "$plid"
     
     resp=$(curl -s "https://youtube.googleapis.com/youtube/v3/playlists" \
         -G \

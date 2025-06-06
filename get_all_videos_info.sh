@@ -1,13 +1,28 @@
 #!/bin/bash
 
-# Replace with your API key and playlist ID
 YOUTUBE_API_KEY="${YOUTUBE_API_KEY}"
 PLAYLIST_ID="${PLAYLIST_ID}"
 NEXT_PAGE_TOKEN=""
 RESULTS_FILE="test.json"
+DEBUG="false"
+# Script can be run individually for a playlist from env vars of can take
+# an input parameter.
+
+if [[ -n "$1" ]]; then
+    PLAYLIST_ID="$1"
+fi
 
 # this is needed for later merge
 echo '[]' > "$RESULTS_FILE"
+
+function rmtempfile {
+    if [[ "$DEBUG" == false ]]; then
+        rm "$RESULTS_FILE"
+        rm ids
+    fi
+}
+
+trap rmtempfile EXIT
 
 declare -i cp=0
 
@@ -24,7 +39,9 @@ do
         --data-urlencode "pageToken=$NEXT_PAGE_TOKEN" \
         --data-urlencode "key=$YOUTUBE_API_KEY")
 
-    echo $RESPONSE > "debug${cp}"
+    if [[ "$DEBUG" == "true" ]]; then
+        echo $RESPONSE > "debug${cp}"
+    fi
 
     ERROR=$(echo "$RESPONSE" | jq '.error')
     if [[ "$ERROR" != "null" ]]; then
@@ -45,14 +62,17 @@ do
 done
 
 echo "All playlist videos retrieved. Results saved in '$RESULTS_FILE'."
-echo "Got a total of $(jq 'length' test.json) entries"
+echo "Got a total of $(jq 'length' ${RESULTS_FILE}) entries"
 
-jq -r '.[].contentDetails.videoId' test.json > ids
-echo "Written all ids"
+if [[ "$DEBUG" == "true" ]]; then
+    jq -r '.[].contentDetails.videoId' "${RESULTS_FILE}" > ids
+    echo "Written all ids"
+fi
+
 
 # use -c to output compact json, one json per line
 # then go through each item and show its privacy status
-jq -c '.[] | select (.status.privacyStatus != "public")' test.json | while read -r item; do
+jq -c '.[] | select (.status.privacyStatus != "public")' "${RESULTS_FILE}" | while read -r item; do
     privacy=$(echo "$item" | jq -r '.status.privacyStatus')
     video_id=$(echo "$item" | jq -r '.contentDetails.videoId')
     title=$(echo "$item" | jq -r '.snippet.title')
