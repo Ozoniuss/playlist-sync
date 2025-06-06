@@ -4,11 +4,11 @@
 # playlist id
 download_playlist() {
 
-    format="%(artist)s - %(title)s.%(ext)s"
+    format="%(artist)s - %(title)s [%(id)s].%(ext)s"
 
     if [[ "$2" == "album" ]]; then
         echo "encountered album, will adjust formatting"
-        format="%(playlist_index)02d - %(artist)s - %(title)s.%(ext)s"
+        format="%(playlist_index)02d - %(artist)s - %(title)s [%(id)s].%(ext)s"
     fi
 
     yt-dlp \
@@ -22,16 +22,16 @@ download_playlist() {
         --audio-format mp3 \
         --audio-quality 320K \
         --embed-metadata \
-        --download-archive _songs.txt "https://www.youtube.com/watch?v=E-h1VCNou6k&list=$1"
+        --download-archive 0_songs.txt "https://www.youtube.com/playlist?list=$1"
 }
 
-for dir in ./playlists/*
+for dir in ./playlist/*
 do
 
     echo "dir $dir"
     cd "${dir}"
 
-    readarray -t lines < _id.txt
+    readarray -t lines < 0_id.txt
     plid="${lines[0]}"
     pltyp="${lines[1]}"
 

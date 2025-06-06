@@ -16,7 +16,7 @@ fi
 echo '[]' > "$RESULTS_FILE"
 
 function rmtempfile {
-    if [[ "$DEBUG" == false ]]; then
+    if [[ "$DEBUG" == "true" ]]; then
         rm "$RESULTS_FILE"
         rm ids
     fi
