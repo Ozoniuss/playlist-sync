@@ -12,7 +12,6 @@ download_playlist() {
     fi
 
     yt-dlp \
-        -v \
         --yes-playlist \
         -o "$format" \
         --windows-filenames \
@@ -25,6 +24,7 @@ download_playlist() {
         --download-archive 0_songs.txt "https://www.youtube.com/playlist?list=$1"
 }
 
+BASE_DIR=$(pwd)
 for dir in ./playlist/*
 do
 
@@ -35,7 +35,7 @@ do
     plid="${lines[0]}"
     pltyp="${lines[1]}"
 
-    ../../get_all_videos_info.sh "$plid"
+    "$BASE_DIR/get_all_videos_info.sh" "$plid"
     
     resp=$(curl -s "https://youtube.googleapis.com/youtube/v3/playlists" \
         -G \
