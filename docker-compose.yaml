@@ -3,7 +3,7 @@ services:
     build: .
     container_name: ytdlp-sync-test
     volumes:
-      - ./playlists/:/playlists
+      - ./playlist/:/playlist
     environment:
       - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
       - PLAYLIST_ID=${PLAYLIST_ID}

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+onlyPlaylist=$1
+BASE_DIR=$(pwd)
+
 # download_playlist downloads a single playlist passed as an argument by
 # playlist id
 download_playlist() {
@@ -22,11 +25,12 @@ download_playlist() {
         --audio-quality 320K \
         --embed-metadata \
         --download-archive 0_songs.txt "https://www.youtube.com/playlist?list=$1"
+
+    echo "exited with status $?"
 }
 
-BASE_DIR=$(pwd)
-for dir in ./playlist/*
-do
+function passDirectory() {
+    local dir=$1
 
     echo "dir $dir"
     cd "${dir}"
@@ -47,4 +51,17 @@ do
     download_playlist $plid $pltyp
 
     cd ../..
+}
+
+if [[ -n $onlyPlaylist ]]; then
+    echo "only downloading playlist $onlyPlaylist"
+    passDirectory "./playlist/$onlyPlaylist"
+    exit 0
+fi
+
+for dir in ./playlist/*
+do
+    passDirectory $dir
 done
+
+

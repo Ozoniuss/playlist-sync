@@ -4,7 +4,6 @@ YOUTUBE_API_KEY="${YOUTUBE_API_KEY}"
 PLAYLIST_ID="${PLAYLIST_ID}"
 NEXT_PAGE_TOKEN=""
 RESULTS_FILE="test.json"
-DEBUG="false"
 # Script can be run individually for a playlist from env vars of can take
 # an input parameter.
 
@@ -16,9 +15,8 @@ fi
 echo '[]' > "$RESULTS_FILE"
 
 function rmtempfile {
-    if [[ "$DEBUG" == "true" ]]; then
+    if [[ -z "$DEBUG" ]]; then
         rm "$RESULTS_FILE"
-        rm ids
     fi
 }
 
@@ -39,7 +37,7 @@ do
         --data-urlencode "pageToken=$NEXT_PAGE_TOKEN" \
         --data-urlencode "key=$YOUTUBE_API_KEY")
 
-    if [[ "$DEBUG" == "true" ]]; then
+    if [[ -n "$DEBUG" ]]; then
         echo $RESPONSE > "debug${cp}"
     fi
 
@@ -64,7 +62,7 @@ done
 echo "All playlist videos retrieved. Results saved in '$RESULTS_FILE'."
 echo "Got a total of $(jq 'length' ${RESULTS_FILE}) entries"
 
-if [[ "$DEBUG" == "true" ]]; then
+if [[ -n "$DEBUG" ]]; then
     jq -r '.[].contentDetails.videoId' "${RESULTS_FILE}" > ids
     echo "Written all ids"
 fi
