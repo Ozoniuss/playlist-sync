@@ -10,4 +10,4 @@ RUN curl --fail -L "https://github.com/yt-dlp/yt-dlp/releases/download/${YT_DLP_
 COPY download.sh /download.sh
 COPY get_all_videos_info.sh /get_all_videos_info.sh
 
-ENTRYPOINT [ "/download.sh" ]
+CMD [ "/download.sh" ]
