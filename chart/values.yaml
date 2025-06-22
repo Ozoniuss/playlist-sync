@@ -1,0 +1,4 @@
+nfs:
+  server: 0.0.0.0 # placeholder
+  path: /some/path # placeholder
+  storage: 1Gi # placeholder
