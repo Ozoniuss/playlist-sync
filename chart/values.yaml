@@ -2,3 +2,10 @@ nfs:
   server: 0.0.0.0 # placeholder
   path: /some/path # placeholder
   storage: 1Gi # placeholder
+
+cronjob:
+  schedule: "*/3 * * * *"
+  command:
+    - get_all_videos_info.sh
+    - OLAK5uy_navuA1JVd6a49RqLCBLE9D7TgB-kXDJbM
+  image: ozoniuss:default@v0.1
