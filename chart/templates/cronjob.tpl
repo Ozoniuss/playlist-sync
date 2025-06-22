@@ -4,7 +4,7 @@ metadata:
   name: playlist-sync-job
   namespace: playlist-sync
 spec:
-  schedule: {{ .Values.cronjob.schedule }}
+  schedule: {{ .Values.cronjob.schedule | quote }}
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
   jobTemplate:
