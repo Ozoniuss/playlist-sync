@@ -6,6 +6,6 @@ nfs:
 cronjob:
   schedule: "*/3 * * * *"
   command:
-    - get_all_videos_info.sh
+    - ./get_all_videos_info.sh
     - OLAK5uy_navuA1JVd6a49RqLCBLE9D7TgB-kXDJbM
   image: ozoniuss/default:v0.1
