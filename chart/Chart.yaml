@@ -1,4 +1,4 @@
 apiVersion: v2
 name: playlist-sync
-version: 0.3.3
+version: 0.4.0
 description: Helm chart for playlist sync
