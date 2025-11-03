@@ -18,7 +18,6 @@ download_playlist() {
         --yes-playlist \
         -o "$format" \
         --windows-filenames \
-        --abort-on-unavailable-fragment \
         --buffer-size 1M \
         -x \
         --audio-format mp3 \
